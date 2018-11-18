@@ -17,19 +17,6 @@ public class Submission {
         return week;
     }
 
-    @Override
-    public String toString() {
-        String s = course + ", viikko " + week + " tehtyjä tehtäviä yhteensä " + exercises.size() + " aikaa kului "
-                + hours + " tehdyt tehtävät: ";
-        for (int i = 0; i < exercises.size(); i++) {
-            s += exercises.get(i);
-            if (i != exercises.size() - 1) {
-                s += ", ";
-            }
-        }
-        return s;
-    }
-
     public int getHours() {
         return hours;
     }

@@ -1,10 +1,16 @@
 package ohtu;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import org.apache.http.client.fluent.Request;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -52,6 +58,20 @@ public class Main {
                 }
             }
             System.out.println("\nyhteensä: " + totalExercises + "/" + totalMaxExercises + " tehtävää " + totalHours
+                    + " tuntia\n");
+            double totalSubmissions = 0, totalSubmittedExercises = 0, totalHours2 = 0;;
+            String statsUrl = "https://studies.cs.helsinki.fi/courses/" + courseInfo.getName() + "/stats";
+            String statsBodyText = Request.Get(statsUrl).execute().returnContent().asString();
+            JsonParser parser = new JsonParser();
+            JsonObject parsedData = parser.parse(statsBodyText).getAsJsonObject();
+            for (Map.Entry<java.lang.String, JsonElement> weekEntry : parsedData.entrySet()) {
+                Map<String, Object> map = mapper.fromJson(weekEntry.getValue().toString(), Map.class);
+                totalSubmissions += (double) map.get("students");
+                totalSubmittedExercises += (double) map.get("exercise_total");
+                totalHours2 += (double) map.get("hour_total");
+            }
+            System.out.println("kurssilla yhteensä " + (int) totalSubmissions + " palautusta, palautettuja tehtäviä "
+                    + (int) totalSubmittedExercises + " kpl, aikaa käytetty yhteensä " + (int) totalHours2
                     + " tuntia\n");
         }
     }
